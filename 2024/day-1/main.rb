@@ -16,7 +16,7 @@ class Day1
     left_list.sum { |location_id| location_id * right_list_tally[location_id].to_i }
   end
 
-  private
+  private  
 
   attr_reader :right_list, :left_list
 
