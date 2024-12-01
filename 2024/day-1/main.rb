@@ -4,9 +4,6 @@ class Day1
   end
 
   def total_distance
-    sorted_left_list = left_list.sort
-    sorted_right_list = right_list.sort
-
     sorted_left_list.zip(sorted_right_list).sum { |left, right| (right - left).abs }
   end
 
@@ -31,6 +28,14 @@ class Day1
       end
 
       [left_list, right_list]
+  end
+
+  def sorted_left_list
+    @sorted_left_list ||= left_list.sort
+  end
+
+  def sorted_right_list
+    @sorted_right_list ||= right_list.sort
   end
 end
 
