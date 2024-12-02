@@ -1,21 +1,27 @@
+require 'set'
+
 class Day2
   attr_reader :report
 
-  MIN_LEVEL_DIFFERENCE = 1
-  MAX_LEVEL_DIFFERENCE = 3
-  LEVEL_DIFFERENCE_RANGE = (MIN_LEVEL_DIFFERENCE..MAX_LEVEL_DIFFERENCE)
+  VALID_LEVEL_RANGE = (1..3).freeze
 
   def initialize(file_path='input.txt')
-    @report = build_levels(file_path)
+    @report = build_report(file_path)
   end
 
-  def number_of_safe
-    report.count { |levels| safe?(levels) }
+  def number_of_safe_level(tolerate_single_bad_level: false)
+    report.count do |levels|
+      if tolerate_single_bad_level
+        levels.combination(levels.size - 1).any? { |subset| safe?(subset) }
+      else
+        safe?(levels)
+      end
+    end
   end
 
   private
 
-  def build_levels(file_path)
+  def build_report(file_path)
     unless File.exist?(file_path)
       raise ArgumentError, "File not found: #{file_path}"
     end
@@ -34,13 +40,14 @@ class Day2
   def strictly_decreasing?(levels)
     strictly_monotonic?(levels, :decreasing)
   end
-
+  
   def strictly_monotonic?(levels, direction)
     levels.each_cons(2).all? do |prev_level, current_level|
       difference = direction == :increasing ? current_level - prev_level : prev_level - current_level
-      LEVEL_DIFFERENCE_RANGE.include?(difference)
+      VALID_LEVEL_RANGE.include?(difference)
     end
   end
 end
 
-p Day2.new.number_of_safe
+p Day2.new.number_of_safe_level
+p Day2.new.number_of_safe_level(tolerate_single_bad_level: true)
