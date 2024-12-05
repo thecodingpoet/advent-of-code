@@ -17,7 +17,7 @@ class WordSearch
     words.each.with_index do |word, row_index|
       word.each_char.with_index do |char, col_index|
         if char == target_word[0]
-          sum += check_all_directions(target_word, row_index, col_index)
+          sum += count_matches_in_all_directions(target_word, row_index, col_index)
         end
       end
     end
@@ -27,14 +27,12 @@ class WordSearch
 
   def sum_of_diagonal_cross_matches(target_word)
     sum = 0
-  
-    return sum unless target_word.length == 3
 
     words.each.with_index do |word, row_index|
       next if row_index == 0 || row_index == words.length - 1
 
       word.each_char.with_index do |char, col_index|
-        next unless char == target_word[1]
+        next unless char == target_word[target_word.length / 2]
 
         diagonals = extract_diagonal_words(row_index, col_index, target_word.length)
         sum += 1 if diagonals.count(target_word) == 2
@@ -46,7 +44,7 @@ class WordSearch
 
   private
 
-  def check_all_directions(target_word, row, col)
+  def count_matches_in_all_directions(target_word, row, col)
     DIRECTIONS.values.flatten.sum do |direction|
       word = extract_word_in_direction(row, col, target_word.length, direction)
       word == target_word ? 1 : 0
