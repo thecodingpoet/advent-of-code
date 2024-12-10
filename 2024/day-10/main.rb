@@ -22,7 +22,6 @@ class TopographicMap
     grid.each.with_index do |row, x|
       row.each.with_index do |col, y|
         next unless col == 0
-
         sum += recursive_move_count(grid, x, y, true)
       end
     end
