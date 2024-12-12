@@ -59,7 +59,7 @@ class TopographicMap
   end
 
   def self.within_grid?(grid, x, y)
-    x >= 0 && y >= 0 && x < grid[0].length && y < grid.length
+    x >= 0 && y >= 0 && x < grid.length && y < grid[0].length
   end
 end
 
