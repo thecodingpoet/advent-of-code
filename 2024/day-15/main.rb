@@ -51,43 +51,21 @@ class WarehouseWoes
         when WALL
           return initial_robot_position
         when EMPTY_SLOT
-          grid[x2][y2], grid[x1][y1] = grid[x1][y1], grid[x2][y2]
+          grid[x2][y2], grid[x1][y1] = ROBOT, EMPTY_SLOT
           return [x2, y2]
         when BOX
-          next_empty_slot = find_next_empty_slot(grid, x2, y2, direction)
-          return initial_robot_position unless next_empty_slot
-
-          move_box(grid, next_empty_slot, direction)
+          while grid[x2][y2] == BOX
+            x2 = x2 + dx
+            y2 = y2 + dy
+          end
+  
+          return initial_robot_position if grid[x2][y2] == WALL
+  
+          grid[x1][y1], grid[x2][y2]= EMPTY_SLOT, BOX
+          grid[x1+dx][y1+dy] = ROBOT
+  
+          return [x1+dx, y1+dy]
         end
-      end
-
-      def find_next_empty_slot(grid, x, y, direction)
-        dx, dy = GRID_MOVEMENTS[direction.to_sym]
-
-        while grid[x][y] != EMPTY_SLOT
-          return nil if grid[x][y] == WALL
-
-          x = x + dx
-          y = y + dy
-        end
-
-        return [x, y]
-      end
-
-      def move_box(grid, next_empty_slot, direction)
-        x, y = next_empty_slot
-        dx, dy = GRID_MOVEMENTS[direction.to_sym].map(&:-@)
-
-        loop do
-          grid[x][y], grid[x+dx][y+dy] = grid[x+dx][y+dy], grid[x][y]
-
-          break if grid[x][y] == ROBOT
-
-          x = x + dx
-          y = y + dy
-        end
-
-        return [x, y]
       end
 
       def sum_boxes_coordinates(grid)
